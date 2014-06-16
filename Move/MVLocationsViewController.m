@@ -10,22 +10,14 @@
 #import "Location.h"
 #import "MVAppDelegate.h"
 #import <NSDate+TimeAgo/NSDate+TimeAgo.h>
-#import "MVMapViewController.h"
+#import "MVAnnotation.h"
+#import <UIAlertView+BlocksKit.h>
 
 @interface MVLocationsViewController ()
 
 @end
 
 @implementation MVLocationsViewController
-
-- (id)initWithStyle:(UITableViewStyle)style
-{
-  self = [super initWithStyle:style];
-  if (self) {
-    // Custom initialization
-  }
-  return self;
-}
 
 - (void)viewDidLoad
 {
@@ -37,11 +29,21 @@
   // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
   // self.navigationItem.rightBarButtonItem = self.editButtonItem;
   
+  _locationsStoredList = [[NSMutableArray alloc] init];
+  
+  self.tableView.delegate = self;
+  self.tableView.dataSource = self;
+  
+  self.mapView.hidden = YES;
+  self.mapView.delegate = self;
+  
   _locations = [[NSMutableArray alloc] init];
   
   if (!_locationManager) {
     _locationManager = [[CLLocationManager alloc] init];
   }
+  
+  [self.dataSwithSegmentedControl addTarget:self action:@selector(dataSwitch:) forControlEvents:UIControlEventValueChanged];
   
   self.locationManager.delegate = self;
   self.locationManager.desiredAccuracy = kCLLocationAccuracyHundredMeters;
@@ -91,27 +93,37 @@
   return cell;
 }
 
-/*
- // Override to support conditional editing of the table view.
- - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
- {
- // Return NO if you do not want the specified item to be editable.
- return YES;
- }
- */
 
-/*
- // Override to support editing the table view.
- - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
- {
- if (editingStyle == UITableViewCellEditingStyleDelete) {
- // Delete the row from the data source
- [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
- } else if (editingStyle == UITableViewCellEditingStyleInsert) {
- // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
- }
- }
- */
+// Override to support conditional editing of the table view.
+- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
+{
+  // Return NO if you do not want the specified item to be editable.
+  return YES;
+}
+
+
+
+// Override to support editing the table view.
+- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
+{
+  if (editingStyle == UITableViewCellEditingStyleDelete) {
+    // Delete the row from the data source
+    
+    Location *removeLocation =  [self.locationsStoredList objectAtIndex:indexPath.row];
+    MVAppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
+    NSManagedObjectContext *context = [appDelegate managedObjectContext];
+    [context deleteObject:removeLocation];
+    NSError *error;
+    if (![context save:&error]) {
+      NSLog(@"Whoops, couldn't delete: %@", [error localizedDescription]);
+    }
+    
+    [self.locationsStoredList removeObject:removeLocation];
+    [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
+  } else if (editingStyle == UITableViewCellEditingStyleInsert) {
+    // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
+  }
+}
 
 /*
  // Override to support rearranging the table view.
@@ -129,21 +141,14 @@
  }
  */
 
- #pragma mark - Navigation
- 
- // In a storyboard-based application, you will often want to do a little preparation before navigation
- - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
- {
- // Get the new view controller using [segue destinationViewController].
- // Pass the selected object to the new view controller.
-   
-   if  ([segue.identifier isEqualToString:@"pushToMapView"]) {
-     MVMapViewController *mapViewController = segue.destinationViewController;
-     NSIndexPath *selectedPath = [self.tableView indexPathForSelectedRow];
-     mapViewController.location = [self.locationsStoredList objectAtIndex:selectedPath.row];
-     mapViewController.allLocations = self.locationsStoredList;
-   }
- }
+#pragma mark - Navigation
+
+// In a storyboard-based application, you will often want to do a little preparation before navigation
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
+{
+  // Get the new view controller using [segue destinationViewController].
+  // Pass the selected object to the new view controller.
+}
 
 #pragma mark - CLLocationManagerDelegate
 
@@ -200,7 +205,13 @@
         } else {
           NSLog(@"Save one object. Distance: %f", distance);
           [self fetchDistance];
-          [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationAutomatic];
+          
+          if (self.dataSwithSegmentedControl.selectedSegmentIndex == 0) {
+            [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationAutomatic];
+          } else if (self.dataSwithSegmentedControl.selectedSegmentIndex == 1) {
+            [self loadMapItems];
+          }
+          
         }
         
       } else {
@@ -214,6 +225,40 @@
 }
 
 #pragma mark - private
+
+- (void)loadMapItems {
+  if (self.locationsStoredList.count > 0) {
+    NSMutableArray *annotationArray = [[NSMutableArray alloc] init];
+    CLLocationCoordinate2D coordinates[self.locationsStoredList.count];
+    for (int index = 0; index < self.locationsStoredList.count; index ++) {
+      Location *location = [self.locationsStoredList objectAtIndex:index];
+      coordinates[index] = CLLocationCoordinate2DMake(location.latitude.doubleValue, location.longitude.doubleValue);
+      
+      MVAnnotation *annotion = [[MVAnnotation alloc] initWithCoordinates:coordinates[index] placeName:[NSString stringWithFormat:@"Flag %i", index] description:[location.timestamp dateTimeAgo]];
+      [annotationArray addObject:annotion];
+    }
+    MKPolyline *polyLine = [MKPolyline polylineWithCoordinates:coordinates count:self.locationsStoredList.count];
+    [self.mapView addOverlay:polyLine];
+    
+    [self.mapView addAnnotations:annotationArray];
+    [self.mapView showAnnotations:self.mapView.annotations animated:NO];
+    
+    MVAnnotation *selectedAnnotation = [annotationArray objectAtIndex:0];
+    [self.mapView selectAnnotation:selectedAnnotation animated:YES];
+  }
+}
+
+- (void)dataSwitch:(id)sender {
+  UISegmentedControl *dataSwitch = (UISegmentedControl *)sender;
+  if (dataSwitch.selectedSegmentIndex == 0) {
+    self.tableView.hidden = NO;
+    self.mapView.hidden = YES;
+  } else if (dataSwitch.selectedSegmentIndex == 1) {
+    self.tableView.hidden = YES;
+    self.mapView.hidden = NO;
+    [self loadMapItems];
+  }
+}
 
 - (void)fetchDistance
 {
@@ -229,9 +274,20 @@
   [fetchRequest setSortDescriptors:sortDescriptors];
   [fetchRequest setEntity:entity];
   NSError *error;
-  self.locationsStoredList = [managedObjectContext executeFetchRequest:fetchRequest error:&error];
+  [self.locationsStoredList removeAllObjects];
+  [self.locationsStoredList addObjectsFromArray:[managedObjectContext executeFetchRequest:fetchRequest error:&error]];
   
   NSLog(@"Locations count: %li", self.locationsStoredList.count);
+}
+
+#pragma mark - MKMapViewDelegate
+
+- (MKOverlayView *)mapView:(MKMapView *)mapView viewForOverlay:(id <MKOverlay>)overlay {
+  MKPolylineView *polylineView = [[MKPolylineView alloc] initWithPolyline:overlay];
+  polylineView.strokeColor = [UIColor redColor];
+  polylineView.lineWidth = 10.0;
+  
+  return polylineView;
 }
 
 

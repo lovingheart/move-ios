@@ -7,10 +7,18 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <MapKit/MapKit.h>
 
-@interface MVLocationsViewController : UITableViewController <
-  CLLocationManagerDelegate
+@interface MVLocationsViewController : UIViewController <
+  CLLocationManagerDelegate,
+  UITableViewDataSource,
+  UITableViewDelegate,
+  MKMapViewDelegate
 >
+
+@property (weak, nonatomic) IBOutlet MKMapView *mapView;
+@property (weak, nonatomic) IBOutlet UITableView *tableView;
+@property (weak, nonatomic) IBOutlet UISegmentedControl *dataSwithSegmentedControl;
 
 @property (nonatomic, strong) CLLocationManager *locationManager;
 
@@ -19,6 +27,6 @@
 @property (nonatomic,strong) NSManagedObjectContext* managedObjectContext;
 @property (nonatomic, strong) NSManagedObjectModel *managedObjectModel;
 
-@property (nonatomic, strong) NSArray *locationsStoredList;
+@property (nonatomic, strong) NSMutableArray *locationsStoredList;
 
 @end

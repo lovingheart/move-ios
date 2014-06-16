@@ -23,7 +23,6 @@ PODS:
     - BlocksKit/Core
     - BlocksKit/DynamicDelegate
   - BorderButton (0.1.1)
-  - GoogleMapsKit (1.0.4)
   - Nimbus/Core (1.2.0)
   - Nimbus/WebController (1.2.0):
     - Nimbus/Core
@@ -34,7 +33,6 @@ DEPENDENCIES:
   - BlocksKit/Core
   - BlocksKit/UIKit
   - BorderButton
-  - GoogleMapsKit
   - Nimbus/WebController
   - NSDate+TimeAgo (~> 1.0.2)
 
@@ -42,7 +40,6 @@ SPEC CHECKSUMS:
   AFNetworking: 7c33510b46f994bc75b75c6e63c1d83414ca40f2
   BlocksKit: 07c8a80f04275efac6a5f8b973782489c083a182
   BorderButton: e85f77c49b417588b2919f5ec3006b055f8c67a5
-  GoogleMapsKit: 4fbcb67919921be3ed4f39566d8d6a5ac4c0f6dc
   Nimbus: 14fd6f034c5f53d3dccef6cfd5763959497289a9
   NSDate+TimeAgo: f3533e0198fab05b716368b19f8c2185d53d6f3b
 

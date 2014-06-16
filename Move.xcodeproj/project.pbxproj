@@ -26,7 +26,6 @@
 		1C45EEBA194AF77A006AAD84 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1C45EEB9194AF77A006AAD84 /* CoreData.framework */; };
 		1C45EEC0194B06BB006AAD84 /* Location.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C45EEBF194B06BB006AAD84 /* Location.m */; };
 		1C45EEC3194B0849006AAD84 /* MVLocationsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C45EEC2194B0849006AAD84 /* MVLocationsViewController.m */; };
-		1C45EEC6194ECF0F006AAD84 /* MVMapViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C45EEC5194ECF0F006AAD84 /* MVMapViewController.m */; };
 		1C45EEC8194ED0D6006AAD84 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1C45EEC7194ED0D6006AAD84 /* MapKit.framework */; };
 		1C45EECB194EE0A2006AAD84 /* MVAnnotation.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C45EECA194EE0A2006AAD84 /* MVAnnotation.m */; };
 		465A52ED0BF0437183E1918D /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = CE5DF3EC8263448FAF448C7E /* libPods.a */; };
@@ -69,8 +68,6 @@
 		1C45EEBF194B06BB006AAD84 /* Location.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Location.m; sourceTree = "<group>"; };
 		1C45EEC1194B0849006AAD84 /* MVLocationsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MVLocationsViewController.h; sourceTree = "<group>"; };
 		1C45EEC2194B0849006AAD84 /* MVLocationsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MVLocationsViewController.m; sourceTree = "<group>"; };
-		1C45EEC4194ECF0F006AAD84 /* MVMapViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MVMapViewController.h; sourceTree = "<group>"; };
-		1C45EEC5194ECF0F006AAD84 /* MVMapViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MVMapViewController.m; sourceTree = "<group>"; };
 		1C45EEC7194ED0D6006AAD84 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
 		1C45EEC9194EE0A2006AAD84 /* MVAnnotation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MVAnnotation.h; sourceTree = "<group>"; };
 		1C45EECA194EE0A2006AAD84 /* MVAnnotation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MVAnnotation.m; sourceTree = "<group>"; };
@@ -190,8 +187,6 @@
 			children = (
 				1C45EEC1194B0849006AAD84 /* MVLocationsViewController.h */,
 				1C45EEC2194B0849006AAD84 /* MVLocationsViewController.m */,
-				1C45EEC4194ECF0F006AAD84 /* MVMapViewController.h */,
-				1C45EEC5194ECF0F006AAD84 /* MVMapViewController.m */,
 			);
 			name = ViewControllers;
 			sourceTree = "<group>";
@@ -341,7 +336,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				1C45EEC6194ECF0F006AAD84 /* MVMapViewController.m in Sources */,
 				1C45EE87194AE2AF006AAD84 /* main.m in Sources */,
 				1C45EEC0194B06BB006AAD84 /* Location.m in Sources */,
 				1C45EEC3194B0849006AAD84 /* MVLocationsViewController.m in Sources */,
