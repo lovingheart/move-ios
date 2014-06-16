@@ -19,6 +19,9 @@
 @property (weak, nonatomic) IBOutlet MKMapView *mapView;
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 @property (weak, nonatomic) IBOutlet UISegmentedControl *dataSwithSegmentedControl;
+@property (weak, nonatomic) IBOutlet UIBarButtonItem *editButton;
+
+@property (nonatomic, strong) UIRefreshControl *refreshControl;
 
 @property (nonatomic, strong) CLLocationManager *locationManager;
 

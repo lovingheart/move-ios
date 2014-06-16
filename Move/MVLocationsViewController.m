@@ -19,6 +19,11 @@
 
 @implementation MVLocationsViewController
 
+- (void)awakeFromNib {
+  _refreshControl = [[UIRefreshControl alloc] init];
+  [self.refreshControl addTarget:self action:@selector(fetchDistance) forControlEvents:UIControlEventValueChanged];
+}
+
 - (void)viewDidLoad
 {
   [super viewDidLoad];
@@ -33,9 +38,13 @@
   
   self.tableView.delegate = self;
   self.tableView.dataSource = self;
+  [self.tableView addSubview:self.refreshControl];
   
   self.mapView.hidden = YES;
   self.mapView.delegate = self;
+  
+  self.editButton.target = self;
+  self.editButton.action = @selector(editTableView:);
   
   _locations = [[NSMutableArray alloc] init];
   
@@ -109,17 +118,29 @@
   if (editingStyle == UITableViewCellEditingStyleDelete) {
     // Delete the row from the data source
     
-    Location *removeLocation =  [self.locationsStoredList objectAtIndex:indexPath.row];
-    MVAppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
-    NSManagedObjectContext *context = [appDelegate managedObjectContext];
-    [context deleteObject:removeLocation];
-    NSError *error;
-    if (![context save:&error]) {
-      NSLog(@"Whoops, couldn't delete: %@", [error localizedDescription]);
-    }
+    __block MVLocationsViewController *__self = self;
     
-    [self.locationsStoredList removeObject:removeLocation];
-    [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
+    UIAlertView *confirmDeleteView = [[UIAlertView alloc] bk_initWithTitle:@"Delete" message:@"Want to delet the location?"];
+    [confirmDeleteView bk_addButtonWithTitle:@"Yes" handler:^{
+      
+      Location *removeLocation =  [__self.locationsStoredList objectAtIndex:indexPath.row];
+      MVAppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
+      NSManagedObjectContext *context = [appDelegate managedObjectContext];
+      [context deleteObject:removeLocation];
+      NSError *error;
+      if (![context save:&error]) {
+        NSLog(@"Whoops, couldn't delete: %@", [error localizedDescription]);
+      }
+      
+      [__self.locationsStoredList removeObject:removeLocation];
+      [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
+      
+    }];
+    [confirmDeleteView bk_setCancelBlock:^{
+    }];
+    [confirmDeleteView show];
+    
+
   } else if (editingStyle == UITableViewCellEditingStyleInsert) {
     // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
   }
@@ -185,13 +206,7 @@
   for (CLLocation *location in locations) {
     NSLog(@"Location: %@", location);
     
-    if (self.locationsStoredList.count > 0) {
-      Location *lastLocation = [self.locationsStoredList lastObject];
-      CLLocationCoordinate2D lastCoordinate = CLLocationCoordinate2DMake(lastLocation.latitude.doubleValue, lastLocation.longitude.doubleValue);
-      
-      CLLocationDistance distance = [location distanceFromLocation:[[CLLocation alloc] initWithLatitude:lastCoordinate.latitude longitude:lastCoordinate.longitude]];
-      
-      if (distance > 100) {
+
         Location *locationInfo = [NSEntityDescription
                                   insertNewObjectForEntityForName:@"Location"
                                   inManagedObjectContext:context];
@@ -203,7 +218,6 @@
         if (![context save:&error]) {
           NSLog(@"Whoops, couldn't save: %@", [error localizedDescription]);
         } else {
-          NSLog(@"Save one object. Distance: %f", distance);
           [self fetchDistance];
           
           if (self.dataSwithSegmentedControl.selectedSegmentIndex == 0) {
@@ -213,11 +227,7 @@
           }
           
         }
-        
-      } else {
-        NSLog(@"It's too close. Distance: %f", distance);
-      }
-    }
+    
     
     
     
@@ -225,6 +235,17 @@
 }
 
 #pragma mark - private
+
+- (void)editTableView:(id)sender {
+  UIBarButtonItem *barButtonItem = (UIBarButtonItem *)sender;
+  if (!self.tableView.isEditing) {
+    barButtonItem.title = @"Done";
+    [self.tableView setEditing:YES animated:YES];
+  } else {
+    barButtonItem.title = @"Edit";
+    [self.tableView setEditing:NO animated:YES];
+  }
+}
 
 - (void)loadMapItems {
   if (self.locationsStoredList.count > 0) {
@@ -253,6 +274,7 @@
   if (dataSwitch.selectedSegmentIndex == 0) {
     self.tableView.hidden = NO;
     self.mapView.hidden = YES;
+    [self fetchDistance];
   } else if (dataSwitch.selectedSegmentIndex == 1) {
     self.tableView.hidden = YES;
     self.mapView.hidden = NO;
@@ -262,6 +284,11 @@
 
 - (void)fetchDistance
 {
+  
+  if (!self.refreshControl.refreshing) {
+    [self.refreshControl beginRefreshing];
+  }
+  
   MVAppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
   NSManagedObjectContext *managedObjectContext = [appDelegate managedObjectContext];
   
@@ -278,6 +305,11 @@
   [self.locationsStoredList addObjectsFromArray:[managedObjectContext executeFetchRequest:fetchRequest error:&error]];
   
   NSLog(@"Locations count: %li", self.locationsStoredList.count);
+  
+  if (self.refreshControl.refreshing) {
+    [self.refreshControl endRefreshing];
+    [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationAutomatic];
+  }
 }
 
 #pragma mark - MKMapViewDelegate

@@ -20,7 +20,7 @@
                                 <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                             </mapView>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="qza-Dv-09d">
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" allowsSelection="NO" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="qza-Dv-09d">
                                 <rect key="frame" x="0.0" y="64" width="320" height="504"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -64,9 +64,11 @@
                                 <segment title="Map"/>
                             </segments>
                         </segmentedControl>
+                        <barButtonItem key="rightBarButtonItem" title="Edit" id="7Ri-QS-gFe"/>
                     </navigationItem>
                     <connections>
                         <outlet property="dataSwithSegmentedControl" destination="tbH-vb-WO0" id="DZR-ln-vGH"/>
+                        <outlet property="editButton" destination="7Ri-QS-gFe" id="qTb-RM-oeH"/>
                         <outlet property="mapView" destination="5W4-VB-fef" id="1yB-rT-PSm"/>
                         <outlet property="tableView" destination="qza-Dv-09d" id="6c2-BS-DRU"/>
                     </connections>
