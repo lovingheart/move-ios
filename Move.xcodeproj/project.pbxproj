@@ -24,10 +24,11 @@
 		1C45EEB4194AE4D2006AAD84 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1C45EEB3194AE4D2006AAD84 /* CoreLocation.framework */; };
 		1C45EEB8194AF705006AAD84 /* Model.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 1C45EEB6194AF705006AAD84 /* Model.xcdatamodeld */; };
 		1C45EEBA194AF77A006AAD84 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1C45EEB9194AF77A006AAD84 /* CoreData.framework */; };
-		1C45EEC0194B06BB006AAD84 /* Location.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C45EEBF194B06BB006AAD84 /* Location.m */; };
 		1C45EEC3194B0849006AAD84 /* MVLocationsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C45EEC2194B0849006AAD84 /* MVLocationsViewController.m */; };
 		1C45EEC8194ED0D6006AAD84 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1C45EEC7194ED0D6006AAD84 /* MapKit.framework */; };
 		1C45EECB194EE0A2006AAD84 /* MVAnnotation.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C45EECA194EE0A2006AAD84 /* MVAnnotation.m */; };
+		1CB689351951661200BD6B0F /* Location.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CB689341951661200BD6B0F /* Location.m */; };
+		1CB689381951661200BD6B0F /* Ticket.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CB689371951661200BD6B0F /* Ticket.m */; };
 		1CCD99E01951589D00910692 /* MVCheckPoint.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CCD99DF1951589D00910692 /* MVCheckPoint.m */; };
 		465A52ED0BF0437183E1918D /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = CE5DF3EC8263448FAF448C7E /* libPods.a */; };
 /* End PBXBuildFile section */
@@ -65,13 +66,15 @@
 		1C45EEB3194AE4D2006AAD84 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 		1C45EEB7194AF705006AAD84 /* Model.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Model.xcdatamodel; sourceTree = "<group>"; };
 		1C45EEB9194AF77A006AAD84 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
-		1C45EEBE194B06BB006AAD84 /* Location.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Location.h; sourceTree = "<group>"; };
-		1C45EEBF194B06BB006AAD84 /* Location.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Location.m; sourceTree = "<group>"; };
 		1C45EEC1194B0849006AAD84 /* MVLocationsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MVLocationsViewController.h; sourceTree = "<group>"; };
 		1C45EEC2194B0849006AAD84 /* MVLocationsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MVLocationsViewController.m; sourceTree = "<group>"; };
 		1C45EEC7194ED0D6006AAD84 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
 		1C45EEC9194EE0A2006AAD84 /* MVAnnotation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MVAnnotation.h; sourceTree = "<group>"; };
 		1C45EECA194EE0A2006AAD84 /* MVAnnotation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MVAnnotation.m; sourceTree = "<group>"; };
+		1CB689331951661200BD6B0F /* Location.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Location.h; sourceTree = "<group>"; };
+		1CB689341951661200BD6B0F /* Location.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Location.m; sourceTree = "<group>"; };
+		1CB689361951661200BD6B0F /* Ticket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Ticket.h; sourceTree = "<group>"; };
+		1CB689371951661200BD6B0F /* Ticket.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Ticket.m; sourceTree = "<group>"; };
 		1CCD99DE1951589D00910692 /* MVCheckPoint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MVCheckPoint.h; sourceTree = "<group>"; };
 		1CCD99DF1951589D00910692 /* MVCheckPoint.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MVCheckPoint.m; sourceTree = "<group>"; };
 		CE5DF3EC8263448FAF448C7E /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -197,12 +200,14 @@
 		1C45EEB5194AF69F006AAD84 /* Objects */ = {
 			isa = PBXGroup;
 			children = (
-				1C45EEBE194B06BB006AAD84 /* Location.h */,
-				1C45EEBF194B06BB006AAD84 /* Location.m */,
 				1C45EEC9194EE0A2006AAD84 /* MVAnnotation.h */,
 				1C45EECA194EE0A2006AAD84 /* MVAnnotation.m */,
 				1CCD99DE1951589D00910692 /* MVCheckPoint.h */,
 				1CCD99DF1951589D00910692 /* MVCheckPoint.m */,
+				1CB689361951661200BD6B0F /* Ticket.h */,
+				1CB689371951661200BD6B0F /* Ticket.m */,
+				1CB689331951661200BD6B0F /* Location.h */,
+				1CB689341951661200BD6B0F /* Location.m */,
 			);
 			name = Objects;
 			sourceTree = "<group>";
@@ -345,12 +350,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				1C45EE87194AE2AF006AAD84 /* main.m in Sources */,
-				1C45EEC0194B06BB006AAD84 /* Location.m in Sources */,
+				1CB689351951661200BD6B0F /* Location.m in Sources */,
 				1C45EEC3194B0849006AAD84 /* MVLocationsViewController.m in Sources */,
 				1C45EE8B194AE2AF006AAD84 /* MVAppDelegate.m in Sources */,
 				1CCD99E01951589D00910692 /* MVCheckPoint.m in Sources */,
 				1C45EEB8194AF705006AAD84 /* Model.xcdatamodeld in Sources */,
 				1C45EECB194EE0A2006AAD84 /* MVAnnotation.m in Sources */,
+				1CB689381951661200BD6B0F /* Ticket.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

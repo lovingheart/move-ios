@@ -14,6 +14,7 @@
 #import <UIAlertView+BlocksKit.h>
 #import <Parse/Parse.h>
 #import "MVCheckPoint.h"
+#import "Ticket.h"
 
 @interface MVLocationsViewController ()
 
@@ -236,13 +237,39 @@
             if (distanceResult < 100) {
               NSLog(@"You made it!");
               
-              UIAlertView *confirmDeleteView = [[UIAlertView alloc] bk_initWithTitle:@"Pass" message:
-                                                [NSString stringWithFormat:@"You've pass the check point. <%f, %f>", checkPointLocation.coordinate.latitude,
-                                                 checkPointLocation.coordinate.longitude]];
-              [confirmDeleteView bk_addButtonWithTitle:@"OK" handler:^{
+              // Check if already have.
+              MVAppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
+              NSManagedObjectContext *context = [appDelegate managedObjectContext];
+              
+              NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
+              NSEntityDescription *entity = [NSEntityDescription
+                                             entityForName:@"Ticket" inManagedObjectContext:context];
+              NSPredicate *predicate = [NSPredicate predicateWithFormat:@"name == %@", checkPoint.title];
+              [fetchRequest setPredicate:predicate];
+              [fetchRequest setEntity:entity];
+              NSError *error;
+              NSArray *allLocations = [context executeFetchRequest:fetchRequest error:&error];
+              if (!allLocations || allLocations.count == 0) {
+                // Save a new one
+                Ticket *getTicket = [NSEntityDescription
+                                     insertNewObjectForEntityForName:@"Ticket"
+                                     inManagedObjectContext:context];
+                getTicket.name = checkPoint.title;
+                if (![context save:&error]) {
+                  NSLog(@"Whoops, couldn't delete: %@", [error localizedDescription]);
+                }
                 
-              }];
-              [confirmDeleteView show];
+                UIAlertView *confirmDeleteView = [[UIAlertView alloc] bk_initWithTitle:@"Pass" message:
+                                                  [NSString stringWithFormat:@"You've pass the check point. <%f, %f>", checkPointLocation.coordinate.latitude,
+                                                   checkPointLocation.coordinate.longitude]];
+                [confirmDeleteView bk_addButtonWithTitle:@"OK" handler:^{
+                }];
+                [confirmDeleteView show];
+              } else {
+                NSLog(@"We've already give it to you.");
+              }
+              
+              
             }
           }
           
@@ -294,7 +321,7 @@
   
   // Clear annotations
   [self.mapView removeAnnotations:self.mapView.annotations];
-   [self.mapView addAnnotations:self.checkPoints];
+  [self.mapView addAnnotations:self.checkPoints];
   
   if (self.locationsStoredList.count > 0) {
     
@@ -361,6 +388,9 @@
     if (![context save:&error]) {
       NSLog(@"Whoops, couldn't delete: %@", [error localizedDescription]);
     }
+    
+    [self.mapView removeOverlays:self.mapView.overlays];
+    
     [__self fetchDistance];
     
   }];
@@ -396,6 +426,15 @@
   if (self.refreshControl.refreshing) {
     [self.refreshControl endRefreshing];
     [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationAutomatic];
+  }
+  
+  NSFetchRequest *ticketFetchRequest = [[NSFetchRequest alloc] init];
+  NSEntityDescription *tiecktEntity = [NSEntityDescription
+                                 entityForName:@"Ticket" inManagedObjectContext:managedObjectContext];
+  [ticketFetchRequest setEntity:tiecktEntity];
+  NSArray *ticket = [managedObjectContext executeFetchRequest:ticketFetchRequest error:&error];
+  if (ticket.count > 1) {
+    NSLog(@"We have %lu ticket", (unsigned long)ticket.count);
   }
 }
 

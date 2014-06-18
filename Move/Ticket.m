@@ -1,20 +1,18 @@
 //
-//  Location.m
+//  Ticket.m
 //  Move
 //
 //  Created by Edward Chiang on 2014/6/18.
 //  Copyright (c) 2014年 LovingHeart, Inc. All rights reserved.
 //
 
-#import "Location.h"
 #import "Ticket.h"
+#import "Location.h"
 
 
-@implementation Location
+@implementation Ticket
 
-@dynamic latitude;
-@dynamic longitude;
-@dynamic timestamp;
+@dynamic name;
 @dynamic relationship;
 
 @end
