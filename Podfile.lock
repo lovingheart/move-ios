@@ -22,11 +22,16 @@ PODS:
   - BlocksKit/UIKit (2.2.3):
     - BlocksKit/Core
     - BlocksKit/DynamicDelegate
+  - Bolts (1.1.0)
   - BorderButton (0.1.1)
+  - Facebook-iOS-SDK (3.15.0):
+    - Bolts
   - Nimbus/Core (1.2.0)
   - Nimbus/WebController (1.2.0):
     - Nimbus/Core
   - NSDate+TimeAgo (1.0.3)
+  - Parse (1.2.19):
+    - Facebook-iOS-SDK (~> 3.11)
 
 DEPENDENCIES:
   - AFNetworking (~> 2.1.0)
@@ -35,12 +40,16 @@ DEPENDENCIES:
   - BorderButton
   - Nimbus/WebController
   - NSDate+TimeAgo (~> 1.0.2)
+  - Parse
 
 SPEC CHECKSUMS:
   AFNetworking: 7c33510b46f994bc75b75c6e63c1d83414ca40f2
   BlocksKit: 07c8a80f04275efac6a5f8b973782489c083a182
+  Bolts: 91c2af8eae1d44e1dd75946a5b0ae04a43ea43e4
   BorderButton: e85f77c49b417588b2919f5ec3006b055f8c67a5
+  Facebook-iOS-SDK: d67a9aa373f28b581e00cefdfd5a1ab8f883ac14
   Nimbus: 14fd6f034c5f53d3dccef6cfd5763959497289a9
   NSDate+TimeAgo: f3533e0198fab05b716368b19f8c2185d53d6f3b
+  Parse: ffebaecaddd32cb52671010f81567c298ff93d04
 
 COCOAPODS: 0.33.1

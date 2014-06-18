@@ -12,6 +12,8 @@
 #import <NSDate+TimeAgo/NSDate+TimeAgo.h>
 #import "MVAnnotation.h"
 #import <UIAlertView+BlocksKit.h>
+#import <Parse/Parse.h>
+#import "MVCheckPoint.h"
 
 @interface MVLocationsViewController ()
 
@@ -21,27 +23,9 @@
 
 - (void)awakeFromNib {
   _refreshControl = [[UIRefreshControl alloc] init];
-  [self.refreshControl addTarget:self action:@selector(fetchDistance) forControlEvents:UIControlEventValueChanged];
+  [self.refreshControl addTarget:self action:@selector(reloadLocations) forControlEvents:UIControlEventValueChanged];
   
   _checkPoints = [[NSMutableArray alloc] init];
-  
-  // Initial check point
-  
-//  MVAnnotation *checkPointAnnotation1 = [[MVAnnotation alloc] initWithCoordinates:CLLocationCoordinate2DMake(+37.33371, -122.06382) placeName:[NSString stringWithFormat:@"Check %i", 0] description:nil];
-//  checkPointAnnotation1.isCheckPoint = YES;
-//  [self.checkPoints addObject:checkPointAnnotation1];
-//  
-//  MVAnnotation *checkPointAnnotation2 = [[MVAnnotation alloc] initWithCoordinates:CLLocationCoordinate2DMake(+37.33355, -122.07559) placeName:[NSString stringWithFormat:@"Check %i", 1] description:nil];
-//  checkPointAnnotation2.isCheckPoint = YES;
-//  [self.checkPoints addObject:checkPointAnnotation2];
-  
-  MVAnnotation *checkPointAnnotationTaiwan1 = [[MVAnnotation alloc] initWithCoordinates:CLLocationCoordinate2DMake(+25.038052, 121.551178) placeName:[NSString stringWithFormat:@"Check %i", 1] description:nil];
-  checkPointAnnotationTaiwan1.isCheckPoint = YES;
-  [self.checkPoints addObject:checkPointAnnotationTaiwan1];
-  
-  MVAnnotation *checkPointAnnotationTaiwan2 = [[MVAnnotation alloc] initWithCoordinates:CLLocationCoordinate2DMake(+25.041381, 121.562166) placeName:[NSString stringWithFormat:@"Check %i", 1] description:nil];
-  checkPointAnnotationTaiwan2.isCheckPoint = YES;
-  [self.checkPoints addObject:checkPointAnnotationTaiwan2];
 }
 
 - (void)viewDidLoad
@@ -76,7 +60,7 @@
   
   self.locationManager.delegate = self;
   self.locationManager.desiredAccuracy = kCLLocationAccuracyBestForNavigation;
-  self.locationManager.distanceFilter = 100;
+  self.locationManager.distanceFilter = 50;
   self.locationManager.activityType = CLActivityTypeAutomotiveNavigation;
   self.locationManager.pausesLocationUpdatesAutomatically = YES;
   [self.locationManager allowDeferredLocationUpdatesUntilTraveled:CLLocationDistanceMax timeout:1000];
@@ -85,8 +69,7 @@
     [self.locationManager startUpdatingLocation];
   }
   
-  [self fetchDistance];
-  
+  [self reloadLocations];
 }
 
 - (void)didReceiveMemoryWarning
@@ -273,6 +256,26 @@
 
 #pragma mark - private
 
+- (void)loadCheckPoints
+{
+  PFQuery *checkPointsQuery = [MVCheckPoint query];
+  [checkPointsQuery whereKey:@"available" equalTo:[NSNumber numberWithBool:YES]];
+  __block MVLocationsViewController *__self = self;
+  [checkPointsQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+    if (objects) {
+      
+      for (MVCheckPoint *checkPoint in objects) {
+        MVAnnotation *checkPointAnnotation = [[MVAnnotation alloc] initWithCoordinates:CLLocationCoordinate2DMake(checkPoint.geoPoint.latitude, checkPoint.geoPoint.longitude) placeName:checkPoint.name description:@""];
+        checkPointAnnotation.isCheckPoint = YES;
+        [__self.checkPoints addObject:checkPointAnnotation];
+      }
+      
+      [__self loadMapItems];
+    }
+  }];
+}
+
+
 - (void)editTableView:(id)sender {
   UIBarButtonItem *barButtonItem = (UIBarButtonItem *)sender;
   if (!self.tableView.isEditing) {
@@ -324,6 +327,11 @@
     self.mapView.hidden = NO;
     [self loadMapItems];
   }
+}
+
+- (void)reloadLocations {
+  [self fetchDistance];
+  [self loadCheckPoints];
 }
 
 - (void)fetchDistance

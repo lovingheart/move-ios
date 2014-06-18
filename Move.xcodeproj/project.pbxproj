@@ -28,6 +28,7 @@
 		1C45EEC3194B0849006AAD84 /* MVLocationsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C45EEC2194B0849006AAD84 /* MVLocationsViewController.m */; };
 		1C45EEC8194ED0D6006AAD84 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1C45EEC7194ED0D6006AAD84 /* MapKit.framework */; };
 		1C45EECB194EE0A2006AAD84 /* MVAnnotation.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C45EECA194EE0A2006AAD84 /* MVAnnotation.m */; };
+		1CCD99E01951589D00910692 /* MVCheckPoint.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CCD99DF1951589D00910692 /* MVCheckPoint.m */; };
 		465A52ED0BF0437183E1918D /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = CE5DF3EC8263448FAF448C7E /* libPods.a */; };
 /* End PBXBuildFile section */
 
@@ -71,6 +72,8 @@
 		1C45EEC7194ED0D6006AAD84 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
 		1C45EEC9194EE0A2006AAD84 /* MVAnnotation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MVAnnotation.h; sourceTree = "<group>"; };
 		1C45EECA194EE0A2006AAD84 /* MVAnnotation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MVAnnotation.m; sourceTree = "<group>"; };
+		1CCD99DE1951589D00910692 /* MVCheckPoint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MVCheckPoint.h; sourceTree = "<group>"; };
+		1CCD99DF1951589D00910692 /* MVCheckPoint.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MVCheckPoint.m; sourceTree = "<group>"; };
 		CE5DF3EC8263448FAF448C7E /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -198,6 +201,8 @@
 				1C45EEBF194B06BB006AAD84 /* Location.m */,
 				1C45EEC9194EE0A2006AAD84 /* MVAnnotation.h */,
 				1C45EECA194EE0A2006AAD84 /* MVAnnotation.m */,
+				1CCD99DE1951589D00910692 /* MVCheckPoint.h */,
+				1CCD99DF1951589D00910692 /* MVCheckPoint.m */,
 			);
 			name = Objects;
 			sourceTree = "<group>";
@@ -343,6 +348,7 @@
 				1C45EEC0194B06BB006AAD84 /* Location.m in Sources */,
 				1C45EEC3194B0849006AAD84 /* MVLocationsViewController.m in Sources */,
 				1C45EE8B194AE2AF006AAD84 /* MVAppDelegate.m in Sources */,
+				1CCD99E01951589D00910692 /* MVCheckPoint.m in Sources */,
 				1C45EEB8194AF705006AAD84 /* Model.xcdatamodeld in Sources */,
 				1C45EECB194EE0A2006AAD84 /* MVAnnotation.m in Sources */,
 			);
