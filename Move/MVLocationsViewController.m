@@ -22,6 +22,26 @@
 - (void)awakeFromNib {
   _refreshControl = [[UIRefreshControl alloc] init];
   [self.refreshControl addTarget:self action:@selector(fetchDistance) forControlEvents:UIControlEventValueChanged];
+  
+  _checkPoints = [[NSMutableArray alloc] init];
+  
+  // Initial check point
+  
+//  MVAnnotation *checkPointAnnotation1 = [[MVAnnotation alloc] initWithCoordinates:CLLocationCoordinate2DMake(+37.33371, -122.06382) placeName:[NSString stringWithFormat:@"Check %i", 0] description:nil];
+//  checkPointAnnotation1.isCheckPoint = YES;
+//  [self.checkPoints addObject:checkPointAnnotation1];
+//  
+//  MVAnnotation *checkPointAnnotation2 = [[MVAnnotation alloc] initWithCoordinates:CLLocationCoordinate2DMake(+37.33355, -122.07559) placeName:[NSString stringWithFormat:@"Check %i", 1] description:nil];
+//  checkPointAnnotation2.isCheckPoint = YES;
+//  [self.checkPoints addObject:checkPointAnnotation2];
+  
+  MVAnnotation *checkPointAnnotationTaiwan1 = [[MVAnnotation alloc] initWithCoordinates:CLLocationCoordinate2DMake(+25.038052, 121.551178) placeName:[NSString stringWithFormat:@"Check %i", 1] description:nil];
+  checkPointAnnotationTaiwan1.isCheckPoint = YES;
+  [self.checkPoints addObject:checkPointAnnotationTaiwan1];
+  
+  MVAnnotation *checkPointAnnotationTaiwan2 = [[MVAnnotation alloc] initWithCoordinates:CLLocationCoordinate2DMake(+25.041381, 121.562166) placeName:[NSString stringWithFormat:@"Check %i", 1] description:nil];
+  checkPointAnnotationTaiwan2.isCheckPoint = YES;
+  [self.checkPoints addObject:checkPointAnnotationTaiwan2];
 }
 
 - (void)viewDidLoad
@@ -55,14 +75,14 @@
   [self.dataSwithSegmentedControl addTarget:self action:@selector(dataSwitch:) forControlEvents:UIControlEventValueChanged];
   
   self.locationManager.delegate = self;
-  self.locationManager.desiredAccuracy = kCLLocationAccuracyHundredMeters;
+  self.locationManager.desiredAccuracy = kCLLocationAccuracyBestForNavigation;
   self.locationManager.distanceFilter = 100;
   self.locationManager.activityType = CLActivityTypeAutomotiveNavigation;
   self.locationManager.pausesLocationUpdatesAutomatically = YES;
   [self.locationManager allowDeferredLocationUpdatesUntilTraveled:CLLocationDistanceMax timeout:1000];
   
   if ([CLLocationManager locationServicesEnabled]) {
-    [self.locationManager startMonitoringSignificantLocationChanges];
+    [self.locationManager startUpdatingLocation];
   }
   
   [self fetchDistance];
@@ -218,6 +238,28 @@
         if (![context save:&error]) {
           NSLog(@"Whoops, couldn't save: %@", [error localizedDescription]);
         } else {
+          
+          // Check the distance
+          for (MVAnnotation *checkPoint in self.checkPoints) {
+            CLLocation *currentLocation = [[CLLocation alloc] initWithLatitude:location.coordinate.latitude longitude:
+                                           location.coordinate.longitude];
+            CLLocation *checkPointLocation = [[CLLocation alloc] initWithLatitude:checkPoint.coordinate.latitude longitude:checkPoint.coordinate.longitude];
+            
+            CLLocationDistance distanceResult = [currentLocation distanceFromLocation:checkPointLocation];
+            
+            if (distanceResult < 100) {
+              NSLog(@"You made it!");
+              
+              UIAlertView *confirmDeleteView = [[UIAlertView alloc] bk_initWithTitle:@"Pass" message:
+                                                [NSString stringWithFormat:@"You've pass the check point. <%f, %f>", checkPointLocation.coordinate.latitude,
+                                                 checkPointLocation.coordinate.longitude]];
+              [confirmDeleteView bk_addButtonWithTitle:@"OK" handler:^{
+                
+              }];
+              [confirmDeleteView show];
+            }
+          }
+          
           [self fetchDistance];
           
           if (self.dataSwithSegmentedControl.selectedSegmentIndex == 0) {
@@ -225,12 +267,7 @@
           } else if (self.dataSwithSegmentedControl.selectedSegmentIndex == 1) {
             [self loadMapItems];
           }
-          
         }
-    
-    
-    
-    
   }
 }
 
@@ -248,7 +285,13 @@
 }
 
 - (void)loadMapItems {
+  
+  // Clear annotations
+  [self.mapView removeAnnotations:self.mapView.annotations];
+   [self.mapView addAnnotations:self.checkPoints];
+  
   if (self.locationsStoredList.count > 0) {
+    
     NSMutableArray *annotationArray = [[NSMutableArray alloc] init];
     CLLocationCoordinate2D coordinates[self.locationsStoredList.count];
     for (int index = 0; index < self.locationsStoredList.count; index ++) {
@@ -261,6 +304,7 @@
     MKPolyline *polyLine = [MKPolyline polylineWithCoordinates:coordinates count:self.locationsStoredList.count];
     [self.mapView addOverlay:polyLine];
     
+    // Load User
     [self.mapView addAnnotations:annotationArray];
     [self.mapView showAnnotations:self.mapView.annotations animated:NO];
     
@@ -322,5 +366,31 @@
   return polylineView;
 }
 
+
+- (MKAnnotationView *)mapView:(MKMapView *)mapView viewForAnnotation:(id <MKAnnotation>)annotation {
+  
+  static NSString *identifier = @"MyAnnotation";
+  MKPinAnnotationView *annotationView = (MKPinAnnotationView *) [_mapView dequeueReusableAnnotationViewWithIdentifier:identifier];
+  
+  MVAnnotation *myAnnotation = (MVAnnotation*) annotation;
+  
+  // If a new annotation is created
+  if (annotationView == nil) {
+    
+    annotationView = [[MKPinAnnotationView alloc] initWithAnnotation:myAnnotation reuseIdentifier:identifier];
+  } else {
+    annotationView.annotation = annotation;
+  }
+  
+  // Annotation's color
+  if (myAnnotation.isCheckPoint) {
+    annotationView.pinColor = MKPinAnnotationColorGreen;
+  }
+  else {
+    annotationView.pinColor = MKPinAnnotationColorRed;
+  }
+  
+  return annotationView;
+}
 
 @end

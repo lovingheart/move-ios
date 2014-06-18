@@ -32,4 +32,6 @@
 
 @property (nonatomic, strong) NSMutableArray *locationsStoredList;
 
+@property (nonatomic, strong) NSMutableArray *checkPoints;
+
 @end
