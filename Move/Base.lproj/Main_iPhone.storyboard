@@ -56,6 +56,7 @@
                     </view>
                     <navigationItem key="navigationItem" id="nYT-di-M9x">
                         <nil key="title"/>
+                        <barButtonItem key="leftBarButtonItem" systemItem="trash" id="FY3-71-WQQ"/>
                         <segmentedControl key="titleView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="bar" selectedSegmentIndex="0" id="tbH-vb-WO0">
                             <rect key="frame" x="87" y="7" width="147" height="31"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -67,6 +68,7 @@
                         <barButtonItem key="rightBarButtonItem" title="Edit" id="7Ri-QS-gFe"/>
                     </navigationItem>
                     <connections>
+                        <outlet property="clearButton" destination="FY3-71-WQQ" id="rGP-78-mM4"/>
                         <outlet property="dataSwithSegmentedControl" destination="tbH-vb-WO0" id="DZR-ln-vGH"/>
                         <outlet property="editButton" destination="7Ri-QS-gFe" id="qTb-RM-oeH"/>
                         <outlet property="mapView" destination="5W4-VB-fef" id="1yB-rT-PSm"/>

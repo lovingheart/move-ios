@@ -33,5 +33,6 @@
 @property (nonatomic, strong) NSMutableArray *locationsStoredList;
 
 @property (nonatomic, strong) NSMutableArray *checkPoints;
+@property (weak, nonatomic) IBOutlet UIBarButtonItem *clearButton;
 
 @end

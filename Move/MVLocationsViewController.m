@@ -50,6 +50,9 @@
   self.editButton.target = self;
   self.editButton.action = @selector(editTableView:);
   
+  self.clearButton.target = self;
+  self.clearButton.action = @selector(clearLocations:);
+  
   _locations = [[NSMutableArray alloc] init];
   
   if (!_locationManager) {
@@ -334,6 +337,38 @@
   [self loadCheckPoints];
 }
 
+- (void)clearLocations:(id)sender {
+  __block MVLocationsViewController *__self = self;
+  UIAlertView *confirmDeleteView = [[UIAlertView alloc] bk_initWithTitle:@"Delete" message:@"Want to delet all locations?"];
+  [confirmDeleteView bk_addButtonWithTitle:@"Yes" handler:^{
+    
+    MVAppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
+    NSManagedObjectContext *context = [appDelegate managedObjectContext];
+    
+    NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
+    NSSortDescriptor *sortDescriptorByTimeStamp = [[NSSortDescriptor alloc] initWithKey:@"timestamp" ascending:NO];
+    NSEntityDescription *entity = [NSEntityDescription
+                                   entityForName:@"Location" inManagedObjectContext:context];
+    NSArray *sortDescriptors = [[NSArray alloc] initWithObjects:sortDescriptorByTimeStamp, nil];
+    [fetchRequest setSortDescriptors:sortDescriptors];
+    [fetchRequest setEntity:entity];
+    NSError *error;
+    NSArray *allLocations = [context executeFetchRequest:fetchRequest error:&error];
+    
+    for (Location *eachLocation in allLocations) {
+      [context deleteObject:eachLocation];
+    }
+    if (![context save:&error]) {
+      NSLog(@"Whoops, couldn't delete: %@", [error localizedDescription]);
+    }
+    [__self fetchDistance];
+    
+  }];
+  [confirmDeleteView bk_setCancelBlock:^{
+  }];
+  [confirmDeleteView show];
+}
+
 - (void)fetchDistance
 {
   
@@ -384,11 +419,11 @@
   
   // If a new annotation is created
   if (annotationView == nil) {
-    
     annotationView = [[MKPinAnnotationView alloc] initWithAnnotation:myAnnotation reuseIdentifier:identifier];
   } else {
     annotationView.annotation = annotation;
   }
+  annotationView.canShowCallout = YES;
   
   // Annotation's color
   if (myAnnotation.isCheckPoint) {
